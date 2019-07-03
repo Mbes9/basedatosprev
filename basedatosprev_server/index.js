@@ -2,6 +2,13 @@ var express = require("express");
 
 var app = express();
 var bodyParser = require("body-parser");
+
+var redis = require('redis');
+var redisClient = redis.createClient(); // this creates a new client
+const uuidv1 = require('uuid/v1');
+
+var redisClient = redis.createClient(6379, '127.0.0.1');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -48,4 +55,25 @@ app.post("/messages", (req, res) => {
   console.log("stringBody: ", body);
   db.collection("messages").insert(req.body);
   res.send("Insertado exitosamente");
+});
+
+
+app.get("/cache/:id", (req, res) => {
+  var id = req.params.id;
+  redisClient.get(id, function (error, result) {
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+    console.log('GET result ->' + result);
+    res.send(result)
+  });
+});
+
+app.post("/cache", (req, res) => {
+  var body = JSON.stringify(req.body);
+  var id = uuidv1();
+  redisClient.set(id,body);
+  console.log("stringBody: ", body);
+  res.send(id);
 });
