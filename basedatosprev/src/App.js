@@ -6,7 +6,7 @@ import {
   DataUsageRounded,
   UpdateRounded
 } from "@material-ui/icons";
-import { getMessages } from "./services/messages";
+import { getMessages, getCache } from "./services/messages";
 import CustomTabs from "./components/CustomTabs";
 import { Button } from "@material-ui/core";
 
@@ -23,12 +23,21 @@ class App extends React.Component {
 
   reloadData = () => {
     this.reloadMessages();
+    this.reloadCache();
   };
 
   reloadMessages = () =>
     getMessages()
       .then(({ data }) => {
         this.setState({ messages: data });
+      })
+      .catch(err => console.log("error", err));
+
+  reloadCache = () =>
+    getCache()
+      .then(({ data: body }) => {
+        const { data } = body;
+        this.setState({ cacheData: data });
       })
       .catch(err => console.log("error", err));
 
@@ -78,6 +87,7 @@ class App extends React.Component {
                   <Table
                     tableHeaderColor="warning"
                     tableHead={["Clave", "Valor"]}
+                    isCache={true}
                     tableData={cacheData}
                   />
                 )

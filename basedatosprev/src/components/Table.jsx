@@ -11,7 +11,7 @@ import TableCell from "@material-ui/core/TableCell";
 import tableStyle from "../assets/tableStyle";
 
 function CustomTable({ ...props }) {
-  const { classes, tableHead, tableData, tableHeaderColor } = props;
+  const { classes, tableHead, tableData, tableHeaderColor, isCache } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -33,26 +33,40 @@ function CustomTable({ ...props }) {
         ) : null}
         <TableBody>
           {tableData.map((prop, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell}>{prop._id}</TableCell>
-                <TableCell className={classes.tableCell}>
-                  {prop.token}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {prop.data.title}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {prop.data.body}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {prop.android.link}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {prop.webpush.link}
-                </TableCell>
-              </TableRow>
-            );
+            if (!isCache)
+              return (
+                <TableRow key={key} className={classes.tableBodyRow}>
+                  <TableCell className={classes.tableCell}>
+                    {prop._id}
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    {prop.token}
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    {prop.data.title}
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    {prop.data.body}
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    {prop.android.link}
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    {prop.webpush.link}
+                  </TableCell>
+                </TableRow>
+              );
+            else
+              return (
+                <TableRow key={key} className={classes.tableBodyRow}>
+                  <TableCell className={classes.tableCell}>
+                    {prop.key}
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    {prop.data}
+                  </TableCell>
+                </TableRow>
+              );
           })}
         </TableBody>
       </Table>

@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^3.1.0",
     "express": "^4.17.1",
-    "mongodb": "^3.2.7"
+    "mongodb": "^3.2.7",
+    "redis-clustr": "^1.7.0",
+    "uuid": "^3.3.2"
   }
 }

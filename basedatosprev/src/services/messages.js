@@ -8,3 +8,8 @@ const api = axios.create({
 export const getMessages = () => {
   return api.get("/Messages");
 };
+
+
+export const getCache = () => {
+  return api.get("/Cache");
+};
