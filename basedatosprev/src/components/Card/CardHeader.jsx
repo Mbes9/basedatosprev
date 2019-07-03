@@ -30,7 +30,11 @@ function CardHeader({ ...props }) {
     [className]: className !== undefined
   });
   return (
-    <div className={cardHeaderClasses} style={{ display: "flex" }} {...rest}>
+    <div
+      className={cardHeaderClasses}
+      style={{ display: "flex", alignItems: "center" }}
+      {...rest}
+    >
       {children}
     </div>
   );

@@ -1,22 +1,29 @@
 import React from "react";
 import Table from "./components/Table";
 import GridItem from "./components/GridItem";
-import Card from "./components/Card/Card";
-import CardHeader from "./components/Card/CardHeader";
-import CardBody from "./components/Card/CardBody";
-import { Button } from "@material-ui/core";
-import { Update } from "@material-ui/icons";
+import {
+  MessageRounded,
+  DataUsageRounded,
+  UpdateRounded
+} from "@material-ui/icons";
 import { getMessages } from "./services/messages";
+import CustomTabs from "./components/CustomTabs";
+import { Button } from "@material-ui/core";
 
 class App extends React.Component {
   state = {
     isReady: false,
-    messages: []
+    messages: [],
+    cacheData: []
   };
 
   componentDidMount() {
-    this.reloadMessages();
+    this.reloadData();
   }
+
+  reloadData = () => {
+    this.reloadMessages();
+  };
 
   reloadMessages = () =>
     getMessages()
@@ -26,37 +33,57 @@ class App extends React.Component {
       .catch(err => console.log("error", err));
 
   render() {
-    const { messages } = this.state;
+    const { messages, cacheData } = this.state;
     return (
       <div>
         <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="warning">
-              <h2 style={{ marginRight: 25 }}>Mensajería</h2>
-              <Button
-                variant="text"
-                style={{ color: "white" }}
-                onClick={this.reloadMessages}
-              >
-                <Update style={{ marginRight: 5 }} />
-                Recargar
-              </Button>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="warning"
-                tableHead={[
-                  "ID",
-                  "Token",
-                  "Título",
-                  "Contenido",
-                  "Link Mobile",
-                  "Link Web"
-                ]}
-                tableData={messages}
-              />
-            </CardBody>
-          </Card>
+          <CustomTabs
+            title={
+              <React.Fragment>
+                <h2 style={{ marginRight: 25 }}>Base de datos</h2>
+                <Button
+                  variant="text"
+                  style={{ color: "white" }}
+                  onClick={this.reloadData}
+                >
+                  <UpdateRounded style={{ marginRight: 5 }} />
+                  Recargar
+                </Button>
+              </React.Fragment>
+            }
+            headerColor="warning"
+            tabs={[
+              {
+                tabName: "Mensajería",
+                tabIcon: MessageRounded,
+                tabContent: (
+                  <Table
+                    tableHeaderColor="warning"
+                    tableHead={[
+                      "ID",
+                      "Token",
+                      "Título",
+                      "Contenido",
+                      "Link Mobile",
+                      "Link Web"
+                    ]}
+                    tableData={messages}
+                  />
+                )
+              },
+              {
+                tabName: "Cache",
+                tabIcon: DataUsageRounded,
+                tabContent: (
+                  <Table
+                    tableHeaderColor="warning"
+                    tableHead={["Clave", "Valor"]}
+                    tableData={cacheData}
+                  />
+                )
+              }
+            ]}
+          />
         </GridItem>
       </div>
     );
