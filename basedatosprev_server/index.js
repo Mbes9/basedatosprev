@@ -3,11 +3,38 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 
-var redis = require('redis');
-var redisClient = redis.createClient(); // this creates a new client
-const uuidv1 = require('uuid/v1');
+var RedisClustr = require('redis-clustr');
 
-var redisClient = redis.createClient(6379, '127.0.0.1');
+var redis = new RedisClustr({
+  servers: [
+    {
+      host: '127.0.0.1',
+      port: 30001
+    },
+    {
+      host: '127.0.0.1',
+      port: 30002
+    },
+    {
+      host: '127.0.0.1',
+      port: 30003
+    },
+    {
+      host: '127.0.0.1',
+      port: 30004
+    },
+    {
+      host: '127.0.0.1',
+      port: 30005
+    },
+    {
+      host: '127.0.0.1',
+      port: 30006
+    }
+  ]
+});
+
+const uuidv1 = require('uuid/v1');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,7 +87,7 @@ app.post("/messages", (req, res) => {
 
 app.get("/cache/:id", (req, res) => {
   var id = req.params.id;
-  redisClient.get(id, function (error, result) {
+  redis.get(id, function (error, result) {
     if (error) {
         console.log(error);
         throw error;
@@ -73,7 +100,7 @@ app.get("/cache/:id", (req, res) => {
 app.post("/cache", (req, res) => {
   var body = JSON.stringify(req.body);
   var id = uuidv1();
-  redisClient.set(id,body);
+  redis.set(id,body);
   console.log("stringBody: ", body);
   res.send(id);
 });
